@@ -2,15 +2,15 @@ const fs = require("fs").promises;
 const path = require("path");
 
 async function initRepo() {
-  const repoPath = path.resolve(process.cwd(), ".mygit");
-  const commitsPath = path.join(repoPath, "commits");
+  const repoPath = path.resolve(process.cwd(), ".mygit"); // hidden folder to store repository data
+  const commitsPath = path.join(repoPath, "commits"); // commits folder to store commit data
 
   try {
-    await fs.mkdir(repoPath, { recursive: true });
-    await fs.mkdir(commitsPath, { recursive: true });
+    await fs.mkdir(repoPath, { recursive: true }); 
+    await fs.mkdir(commitsPath, { recursive: true }); 
     await fs.writeFile(
-      path.join(repoPath, "config.json"),
-      JSON.stringify({ bucket: process.env.S3_BUCKET }),
+      path.join(repoPath, "config.json"), // create a config file to store repository configuration
+      JSON.stringify({ bucket: process.env.S3_BUCKET }), 
     );
 
     console.log("Initialized empty repository in .mygit");
