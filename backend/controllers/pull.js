@@ -36,7 +36,7 @@ async function pullRepo() {
 
     console.log("All commits pulled from S3");
   } catch (err) {
-    console.log("Unable to pull : ", err);
+    console.error("Unable to pull : ", err);
   }
 }
 

@@ -27,7 +27,7 @@ async function pushRepo() {
 
     console.log("All commits pushed to S3.");
   } catch (err) {
-    console.log("Error pushing to S3 : ", err);
+    console.error("Error pushing to S3 : ", err);
   }
 }
 
