@@ -11,6 +11,7 @@ const { pullRepo } = require("./controllers/pull");
 const { revertRepo } = require("./controllers/revert");
 
 yargs(hideBin(process.argv))
+  .command("start", "Starts a new server", {}, startServer)
   .command("init", "Initialize a new repository", {}, initRepo)
   .command(
     "add <file>",
@@ -56,3 +57,7 @@ yargs(hideBin(process.argv))
 
   .demandCommand(1, "You need to specify a command")
   .help().argv;
+
+function startServer() {
+  console.log("Server logic called");
+}
