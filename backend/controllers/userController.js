@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { MongoClient} = require("mongodb");
+const { MongoClient, ReturnDocument } = require("mongodb");
 const dotenv = require("dotenv");
-const ObjectId = require("mongodb").ObjectId;
+var ObjectId = require("mongodb").ObjectId;
 
 dotenv.config();
 const uri = process.env.MONGODB_URI;
@@ -102,15 +102,16 @@ const login = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-  const currId = req.params.id;
+  const userId = req.params.id;
 
   try {
     await connectClient();
     const db = client.db("devhub");
     const usersCollection = db.collection("users");
 
+    // convert currId into mongodb ObjectId, because in mongodb id is stored as the ObjectId
     const user = await usersCollection.findOne({
-      _id: new ObjectId(currId),
+      _id: new ObjectId(userId),
     });
 
     if (!user) {
@@ -124,8 +125,44 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-const updateUserProfile = (req, res) => {
-  res.send("Profile updated!");
+const updateUserProfile = async (req, res) => {
+  const userId = req.params.id;
+  const { email, password } = req.body;
+
+  try {
+    await connectClient();
+    const db = client.db("devhub");
+    const usersCollection = db.collection("users");
+
+    let updateFields = { email };
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      updateFields.password = hashedPassword;
+    }
+
+    const result = await usersCollection.findOneAndUpdate(
+      {
+        _id: new ObjectId(userId),
+      },
+      {
+        $set: updateFields,
+      },
+      {
+        returnDocument: "after",
+      },
+    );
+
+    if (!result.value) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    res.send(result.value);
+  } catch (error) {
+    console.error("Error during fetching user profile : ", error);
+    res.status(500).send("Server error!");
+  }
 };
 
 const deleteUserProfile = (req, res) => {
