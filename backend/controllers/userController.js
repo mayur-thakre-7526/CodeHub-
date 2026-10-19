@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { MongoClient } = require("mongodb");
+const { MongoClient} = require("mongodb");
 const dotenv = require("dotenv");
+const ObjectId = require("mongodb").ObjectId;
 
 dotenv.config();
 const uri = process.env.MONGODB_URI;
@@ -56,8 +57,18 @@ const signup = async (req, res) => {
   }
 };
 
-const getAllUsers = (req, res) => {
-  res.send("All users fetched!");
+const getAllUsers = async (req, res) => {
+  try {
+    await connectClient();
+    const db = client.db("devhub");
+    const usersCollection = db.collection("users");
+
+    const users = await usersCollection.find({}).toArray(); // convert into js array because db response data can't directly convert into json
+    res.json(users);
+  } catch (error) {
+    console.error("Error during fetching all users : ", error.message);
+    res.status(500).send("Server error");
+  }
 };
 
 const login = async (req, res) => {
@@ -90,8 +101,27 @@ const login = async (req, res) => {
   }
 };
 
-const getUserProfile = (req, res) => {
-  res.send("Profile fetched");
+const getUserProfile = async (req, res) => {
+  const currId = req.params.id;
+
+  try {
+    await connectClient();
+    const db = client.db("devhub");
+    const usersCollection = db.collection("users");
+
+    const user = await usersCollection.findOne({
+      _id: new ObjectId(currId),
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    res.send(user);
+  } catch (error) {
+    console.error("Error during fetching user profile : ", error);
+    res.status(500).send("Server error!");
+  }
 };
 
 const updateUserProfile = (req, res) => {
