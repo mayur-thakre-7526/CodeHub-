@@ -131,42 +131,82 @@ const updateUserProfile = async (req, res) => {
 
   try {
     await connectClient();
+
+    if (!ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID!" });
+    }
+
     const db = client.db("devhub");
     const usersCollection = db.collection("users");
 
-    let updateFields = { email };
+    const updateFields = {};
+
+    if (email) {
+      updateFields.email = email;
+    }
 
     if (password) {
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-      updateFields.password = hashedPassword;
+      updateFields.password = await bcrypt.hash(password, salt);
     }
 
-    const result = await usersCollection.findOneAndUpdate(
-      {
-        _id: new ObjectId(userId),
-      },
-      {
-        $set: updateFields,
-      },
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ message: "No fields to update!" });
+    }
+
+    // console.log("User ID from URL:", userId);
+    // console.log("Valid ObjectId:", ObjectId.isValid(userId));
+
+    // const existingUser = await usersCollection.findOne({
+    //   _id: new ObjectId(userId),
+    // });
+
+    // console.log("User exists:", !!existingUser);
+
+    const updatedUser = await usersCollection.findOneAndUpdate(
+      { _id: new ObjectId(userId) },
+      { $set: updateFields },
       {
         returnDocument: "after",
+        projection: { password: 0 },
       },
     );
 
-    if (!result.value) {
+    if (!updatedUser) {
       return res.status(404).json({ message: "User not found!" });
     }
 
-    res.send(result.value);
+    return res.status(200).json({
+      message: "User profile updated successfully!",
+      user: updatedUser,
+    });
   } catch (error) {
-    console.error("Error during fetching user profile : ", error);
-    res.status(500).send("Server error!");
+    console.error("Error updating user profile:", error);
+    return res.status(500).json({ message: "Server error!" });
   }
 };
 
-const deleteUserProfile = (req, res) => {
-  res.send("Profile deleted!");
+const deleteUserProfile = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    await connectClient();
+    const db = client.db("devhub");
+    const usersCollection = db.collection("users");
+
+    const result = await usersCollection.deleteOne({
+      _id: new ObjectId(userId),
+    });
+
+    if (result.deletedCount == 0) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    res.json({ message: "User Profile deleted!" });
+  } catch (error) {
+    console.error("Error during Updating user profile : ", error);
+    res.status(500).send("Server error!");
+  }
 };
 
 module.exports = {
