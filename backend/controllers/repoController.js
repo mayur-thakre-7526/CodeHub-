@@ -1,5 +1,39 @@
-const createRepository = (req, res) => {
-  res.send("Repository created!");
+const mongoose = require("mongoose");
+const Repository = require("../models/repo.model.js");
+const User = require("../models/user.model.js");
+const Issue = require("../models/issue.model.js");
+
+const createRepository = async (req, res) => {
+  const { owner, name, issues, content, description, visibility } = req.body;
+
+  try {
+    if (!name) {
+      return res.status(400).json({ error: "Repository name is required!" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(owner)) {
+      return res.status(400).json({ error: "Owner ID is required!" });
+    }
+
+    const newRepository = new Repository({
+      name,
+      description,
+      visibility,
+      owner,
+      content,
+      issues,
+    });
+
+    const result = await newRepository.save();
+
+    res.status(201).json({
+      message: "Repository created!",
+      repositoryId: result._id,
+    });
+  } catch (error) {
+    console.error("Error during repository creation : ", error.message);
+    res.status(500).send("Server error");
+  }
 };
 
 const getAllRepositories = (req, res) => {

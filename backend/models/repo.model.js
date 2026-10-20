@@ -3,16 +3,18 @@ const { Schema } = require("mongoose");
 
 const repoSchema = new Schema({
   name: {
-    tyype: String,
+    type: String,
     required: true,
     unique: true,
   },
   description: {
     type: String,
   },
-  content: {
-    type: String,
-  },
+  content: [
+    {
+      type: String,
+    },
+  ],
   visibility: {
     type: Boolean,
   },
