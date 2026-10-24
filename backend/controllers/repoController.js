@@ -49,8 +49,18 @@ const getAllRepositories = async (req, res) => {
   }
 };
 
-const fetchRepositoryById = (req, res) => {
-  res.send("Repository details fetched!");
+const fetchRepositoryById = async (req, res) => {
+  const { userId } = req.params.id;
+  try {
+    const repository = await Repository.find({ _id: userId })
+      .populate("owner")
+      .populate("issues");
+
+    res.json(repository);
+  } catch (error) {
+    console.error("Error during all repository fetching : ", error.message);
+    res.status(500).send("Server error");
+  }
 };
 
 const fetchRepositoryByName = (req, res) => {
