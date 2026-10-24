@@ -36,8 +36,17 @@ const createRepository = async (req, res) => {
   }
 };
 
-const getAllRepositories = (req, res) => {
-  res.send("All Repository Fetched!");
+const getAllRepositories = async (req, res) => {
+  try {
+    const repositories = await Repository.find({})
+      .populate("owner")
+      .populate("issues");
+
+    res.json(repositories);
+  } catch (error) {
+    console.error("Error during all repositories fetching : ", error.message);
+    res.status(500).send("Server error");
+  }
 };
 
 const fetchRepositoryById = (req, res) => {
