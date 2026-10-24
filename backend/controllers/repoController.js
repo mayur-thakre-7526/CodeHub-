@@ -100,8 +100,31 @@ const fetchRepositoryForCurrentUser = async (req, res) => {
   }
 };
 
-const updateRepositoryById = (req, res) => {
-  res.send("Repository updated");
+const updateRepositoryById = async (req, res) => {
+  const id = req.params;
+  const { content, description } = req.body;
+
+  try {
+    const repository = await Repository.findById(id);
+
+    if (!repository) {
+      return res.status(404).json({ error: "User Repository not found" });
+    }
+
+    repository.content.push(content);
+    repository.description = description;
+
+    const updatedRepository = await repository.save();
+
+    res.json({
+      message: "Repository updated successfully",
+      repository: updatedRepository,
+    });
+    
+  } catch (error) {
+    console.error("Error during updating the repository", error.message);
+    res.status(500).send("Server Error");
+  }
 };
 
 const deleteRepositoryById = (req, res) => {
