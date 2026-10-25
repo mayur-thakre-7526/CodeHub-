@@ -129,6 +129,10 @@
   box-sizing: border-box;
 }
 
+.pass-box a {
+  text-decoration: none;
+}
+
 .signup-button {
   width: 250px;
 }
