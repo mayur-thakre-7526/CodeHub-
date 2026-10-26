@@ -39,8 +39,8 @@ const Login = () => {
 
       window.location.href = "/";
     } catch (err) {
-      console.error(err);
-      alert("Login Failed!");
+      console.error("Login error:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Login Failed!");
       setLoading(false);
     }
   };
