@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "./dashboard.css";
-import Navbar from "../Navbar";
+import "../navbar/navbar.css";
+import Navbar from "../navbar/Navbar.jsx";
 
 const Dashboard = () => {
   const [repositories, setRepositories] = useState([]); // current user repositories
@@ -20,7 +20,7 @@ const Dashboard = () => {
           `http://localhost:3002/repo/user/${userId}`,
         );
         const data = await response.json();
-        setRepositories(data.repositories);
+        setRepositories(data.userRepositories);
       } catch (err) {
         console.error("Error while fecthing repositories: ", err);
       }
@@ -32,7 +32,7 @@ const Dashboard = () => {
         const response = await fetch(`http://localhost:3002/repo/all`);
         const data = await response.json();
         setSuggestedRepositories(data);
-        console.log(suggestedRepositories);
+        console.log(data);
       } catch (err) {
         console.error("Error while fecthing repositories: ", err);
       }
