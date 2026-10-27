@@ -1,35 +1,39 @@
+const { Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
 
-const repoSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  description: {
-    type: String,
-  },
-  content: [
-    {
+const repoSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    description: {
       type: String,
     },
-  ],
-  visibility: {
-    type: Boolean,
-  },
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  issues: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Issue",
+    content: [
+      {
+        type: String,
+      },
+    ],
+    visibility: {
+      type: Boolean,
     },
-  ],
-});
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    issues: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Issue",
+      },
+    ],
+  },
+  { Timestamp: true },
+);
 
 const Repository = mongoose.model("Repository", repoSchema);
 
