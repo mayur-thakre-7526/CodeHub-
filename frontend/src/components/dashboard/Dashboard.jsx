@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../navbar/navbar.css";
 import Navbar from "../navbar/Navbar.jsx";
 import "./dashboard.css";
+import RepositoryCard from "./RepositoryCard.jsx";
 
 const Dashboard = () => {
   const [repositories, setRepositories] = useState([]); // current user repositories
@@ -61,14 +62,9 @@ const Dashboard = () => {
       <section id="dashboard">
         <aside>
           <h3>Suggested Repositories</h3>
-          {suggestedRepositories.map((repo) => {
-            return (
-              <div key={repo._id}>
-                <h4>{repo.name}</h4>
-                <h4>{repo.description}</h4>
-              </div>
-            );
-          })}
+          {suggestedRepositories.map((repo) => (
+            <RepositoryCard key={repo._id} repo={repo} variant="compact" />
+          ))}
         </aside>
         <main>
           <h2>Your Repositories</h2>
@@ -80,14 +76,9 @@ const Dashboard = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          {searchResults.map((repo) => {
-            return (
-              <div key={repo._id}>
-                <h4>{repo.name}</h4>
-                <h4>{repo.description}</h4>
-              </div>
-            );
-          })}
+          {searchResults.map((repo) => (
+            <RepositoryCard key={repo._id} repo={repo} />
+          ))}
         </main>
         <aside>
           <h3>Upcoming Events</h3>
