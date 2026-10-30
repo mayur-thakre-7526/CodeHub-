@@ -12,7 +12,12 @@ repoRouter.get("/repo/all", repoController.getAllRepositories);
 
 repoRouter.get("/repo/:id", optionalAuth, repoController.fetchRepositoryById);
 
-repoRouter.get("/repo/name/:name", repoController.fetchRepositoryByName);
+repoRouter.get(
+  "/repo/name/:name",
+  optionalAuth,
+  repoController.fetchRepositoryByName,
+);
+
 repoRouter.get(
   "/repo/user/:userId",
   repoController.fetchRepositoryForCurrentUser,

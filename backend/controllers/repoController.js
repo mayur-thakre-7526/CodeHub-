@@ -38,14 +38,19 @@ const createRepository = async (req, res) => {
 
 const getAllRepositories = async (req, res) => {
   try {
-    const repositories = await Repository.find({})
-      .populate("owner")
+    const repositories = await Repository.find({
+      visibility: true,
+    })
+      .populate("owner", "username")
       .populate("issues");
 
-    res.json(repositories);
+    return res.status(200).json(repositories);
   } catch (error) {
-    console.error("Error during all repositories fetching : ", error.message);
-    res.status(500).send("Server error");
+    console.error("Error fetching repositories:", error.message);
+
+    return res.status(500).json({
+      error: "Unable to fetch repositories.",
+    });
   }
 };
 
@@ -94,16 +99,30 @@ const fetchRepositoryById = async (req, res) => {
 };
 
 const fetchRepositoryByName = async (req, res) => {
-  const { name: repoName } = req.params;
+  const { name } = req.params;
   try {
-    const repository = await Repository.find({ name: repoName })
-      .populate("owner")
+    const repositories = await Repository.find({ name })
+      .populate("owner", "username")
       .populate("issues");
 
-    res.json(repository);
+    const accessibleRepositories = repositories.filter((repository) => {
+      const isPublic = repository.visibility === true;
+
+      const isOwner =
+        req.user &&
+        repository.owner &&
+        repository.owner._id.toString() === req.user.id.toString();
+
+      return isPublic || isOwner;
+    });
+
+    return res.status(200).json(accessibleRepositories);
   } catch (error) {
-    console.error("Error during all repository fetching : ", error.message);
-    res.status(500).send("Server error");
+    console.error("Error fetching repository by name:", error.message);
+
+    return res.status(500).json({
+      error: "Unable to fetch repository.",
+    });
   }
 };
 
