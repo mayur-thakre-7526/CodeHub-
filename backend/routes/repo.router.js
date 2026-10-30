@@ -1,6 +1,7 @@
 const express = require("express");
 const repoController = require("../controllers/repoController.js");
 const { authenticateToken } = require("../middleware/auth.js");
+const { optionalAuth } = require("../middleware/optionalAuth.js");
 
 const { authorizeRepositoryOwner } = require("../middleware/repositoryAuth.js");
 
@@ -8,7 +9,9 @@ const repoRouter = express.Router();
 
 repoRouter.post("/repo/create", repoController.createRepository);
 repoRouter.get("/repo/all", repoController.getAllRepositories);
-repoRouter.get("/repo/:id", repoController.fetchRepositoryById);
+
+repoRouter.get("/repo/:id", optionalAuth, repoController.fetchRepositoryById);
+
 repoRouter.get("/repo/name/:name", repoController.fetchRepositoryByName);
 repoRouter.get(
   "/repo/user/:userId",
