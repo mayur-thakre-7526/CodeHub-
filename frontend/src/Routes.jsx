@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate, useRoutes } from "react-router-dom";
+import RepositoryDetails from "./components/repository/RepositoryDetails";
 
 // Pages List
 import Dashboard from "./components/dashboard/Dashboard";
@@ -49,6 +50,10 @@ const ProjectRoutes = () => {
     {
       path: "/profile",
       element: <Profile />,
+    },
+    {
+      path: "/repo/:id",
+      element: <RepositoryDetails />,
     },
   ]);
 
