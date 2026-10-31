@@ -4,35 +4,52 @@ const User = require("../models/user.model.js");
 const Issue = require("../models/issue.model.js");
 
 const createRepository = async (req, res) => {
-  const { owner, name, issues, content, description, visibility } = req.body;
+  const { name, description, content, issues, visibility } = req.body;
 
   try {
-    if (!name) {
-      return res.status(400).json({ error: "Repository name is required!" });
+    // Validate repository name
+    if (!name || !name.trim()) {
+      return res.status(400).json({
+        error: "Repository name is required.",
+      });
     }
 
-    if (!mongoose.Types.ObjectId.isValid(owner)) {
-      return res.status(400).json({ error: "Owner ID is required!" });
+    // Validate visibility
+    if (typeof visibility !== "boolean") {
+      return res.status(400).json({
+        error: "Visibility must be true or false.",
+      });
     }
 
+    // Owner comes from the verified JWT, not request body
     const newRepository = new Repository({
-      name,
+      name: name.trim(),
       description,
-      visibility,
-      owner,
       content,
       issues,
+      visibility,
+      owner: req.user.id,
     });
 
-    const result = await newRepository.save();
+    const savedRepository = await newRepository.save();
 
-    res.status(201).json({
-      message: "Repository created!",
-      repositoryId: result._id,
+    return res.status(201).json({
+      message: "Repository created successfully.",
+      repositoryId: savedRepository._id,
     });
   } catch (error) {
-    console.error("Error during repository creation : ", error.message);
-    res.status(500).send("Server error");
+    // Duplicate repository name
+    if (error.code === 11000) {
+      return res.status(409).json({
+        error: "A repository with this name already exists.",
+      });
+    }
+
+    console.error("Error creating repository:", error.message);
+
+    return res.status(500).json({
+      error: "Unable to create repository.",
+    });
   }
 };
 
