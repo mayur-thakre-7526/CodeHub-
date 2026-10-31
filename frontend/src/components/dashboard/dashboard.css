@@ -277,7 +277,6 @@
   border-radius: 12px;
 }
 
-
 .dashboard-repositories-header {
   display: flex;
   justify-content: space-between;
@@ -300,4 +299,34 @@
 
 .dashboard-create-button:hover {
   background: #2ea043;
+}
+
+.repository-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.repository-actions button {
+  padding: 6px 10px;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  background: #21262d;
+  color: #e6edf3;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.repository-actions button:hover {
+  background: #30363d;
+}
+
+.repository-actions .repository-delete-button {
+  color: #ff7b72;
+  border-color: #6e3630;
+}
+
+.repository-actions .repository-delete-button:hover {
+  background: #3d1f1c;
 }

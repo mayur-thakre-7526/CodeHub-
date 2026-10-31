@@ -165,17 +165,29 @@ const fetchRepositoryForCurrentUser = async (req, res) => {
 };
 
 const updateRepositoryById = async (req, res) => {
-  const { content, description } = req.body;
+  const { name, content, description } = req.body;
 
   try {
-    const repository = await req.repository;
+    const repository = req.repository;
+
+    if (name !== undefined) {
+      const trimmedName = name.trim();
+
+      if (!trimmedName) {
+        return res.status(400).json({
+          error: "Repository name cannot be empty.",
+        });
+      }
+
+      repository.name = trimmedName;
+    }
 
     if (content !== undefined) {
       repository.content.push(content);
     }
 
     if (description !== undefined) {
-      repository.description = description;
+      repository.description = description.trim();
     }
 
     const updatedRepository = await repository.save();
@@ -185,6 +197,12 @@ const updateRepositoryById = async (req, res) => {
       repository: updatedRepository,
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({
+        error: "A repository with this name already exists.",
+      });
+    }
+
     console.error("Error updating repository:", error.message);
 
     return res.status(500).json({

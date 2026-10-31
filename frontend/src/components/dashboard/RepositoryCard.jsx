@@ -1,11 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const RepositoryCard = ({ repo, variant = "default" }) => {
+const RepositoryCard = ({
+  repo,
+  variant = "default",
+  isOwner = false,
+  onEdit,
+  onDelete,
+}) => {
+  const handleEdit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onEdit?.(repo);
+  };
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onDelete?.(repo);
+  };
+
   return (
     <Link to={`/repo/${repo._id}`} className="repository-card-link">
       <article
-        className={`repository-card ${variant === "compact" ? "repository-card-compact" : ""}`}
+        className={`repository-card ${
+          variant === "compact" ? "repository-card-compact" : ""
+        }`}
       >
         <div className="repository-card-header">
           <div className="repository-icon" aria-hidden="true">
@@ -27,6 +47,22 @@ const RepositoryCard = ({ repo, variant = "default" }) => {
             <span className="status-dot"></span>
             CodeHub Repository
           </span>
+
+          {isOwner && (
+            <div className="repository-actions">
+              <button type="button" onClick={handleEdit}>
+                Edit
+              </button>
+
+              <button
+                type="button"
+                className="repository-delete-button"
+                onClick={handleDelete}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
       </article>
     </Link>

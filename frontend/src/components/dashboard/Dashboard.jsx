@@ -96,6 +96,98 @@ const Dashboard = () => {
     setSearchResults(filteredRepositories);
   }, [searchQuery, repositories]);
 
+  const handleEditRepository = async (repo) => {
+    const name = window.prompt("Enter repository name:", repo.name);
+
+    if (name === null || !name.trim()) {
+      return;
+    }
+
+    const description = window.prompt(
+      "Enter repository description:",
+      repo.description || "",
+    );
+
+    if (description === null) {
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `http://localhost:3002/repo/update/${repo._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: name.trim(),
+            description: description.trim(),
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Unable to update repository.");
+      }
+
+      setRepositories((previousRepositories) =>
+        previousRepositories.map((item) =>
+          item._id === repo._id ? data.repository : item,
+        ),
+      );
+
+      alert("Repository updated successfully!");
+    } catch (error) {
+      console.error("Error updating repository:", error);
+      alert(error.message || "Something went wrong.");
+    }
+  };
+
+  const handleDeleteRepository = async (repo) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${repo.name}"? This action cannot be undone.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `http://localhost:3002/repo/delete/${repo._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Unable to delete repository.");
+      }
+
+      setRepositories((previousRepositories) =>
+        previousRepositories.filter((item) => item._id !== repo._id),
+      );
+
+      alert("Repository deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting repository:", error);
+      alert(error.message || "Something went wrong.");
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -180,7 +272,13 @@ const Dashboard = () => {
           {!isRepositoriesLoading &&
             !repositoriesError &&
             searchResults.map((repo) => (
-              <RepositoryCard key={repo._id} repo={repo} />
+              <RepositoryCard
+                key={repo._id}
+                repo={repo}
+                isOwner={true}
+                onEdit={handleEditRepository}
+                onDelete={handleDeleteRepository}
+              />
             ))}
         </main>
 
