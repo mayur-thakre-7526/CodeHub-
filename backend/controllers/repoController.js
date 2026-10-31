@@ -38,9 +38,7 @@ const createRepository = async (req, res) => {
 
 const getAllRepositories = async (req, res) => {
   try {
-    const repositories = await Repository.find({
-      visibility: true,
-    })
+    const repositories = await Repository.find({ visibility: true })
       .populate("owner", "username")
       .populate("issues");
 

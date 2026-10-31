@@ -4,7 +4,8 @@
   "description": "Backend server for CodeHub",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "node index.js start"
   },
   "keywords": [],
   "author": "Mayur Thakre",
@@ -24,5 +25,8 @@
     "socket.io": "^4.8.4",
     "uuid": "^14.0.2",
     "yargs": "^18.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

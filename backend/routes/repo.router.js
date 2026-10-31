@@ -8,6 +8,7 @@ const { authorizeRepositoryOwner } = require("../middleware/repositoryAuth.js");
 const repoRouter = express.Router();
 
 repoRouter.post("/repo/create", repoController.createRepository);
+
 repoRouter.get("/repo/all", repoController.getAllRepositories);
 
 repoRouter.get("/repo/:id", optionalAuth, repoController.fetchRepositoryById);

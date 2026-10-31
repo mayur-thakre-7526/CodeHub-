@@ -18,7 +18,8 @@ const repoSchema = new Schema(
       },
     ],
     visibility: {
-      type: Boolean,
+      type: Boolean, // visibility true mean's public
+      default: "true",
     },
     owner: {
       type: Schema.Types.ObjectId,
