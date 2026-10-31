@@ -7,6 +7,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import Profile from "./components/user/Profile";
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
+import CreateRepository from "./components/repository/CreateRepository";
 
 // Auth Context
 import { useAuth } from "./authContext";
@@ -29,15 +30,19 @@ const ProjectRoutes = () => {
       navigate("/auth");
     }
 
-    if (userIdFromStorage && window.location.pathname == "/auth") {
-      navigate("/");
-    }
+    // if (userIdFromStorage && window.location.pathname == "/auth") {
+    //   navigate("/");
+    // }
   }, [currentUser, navigate, setCurrentUser]);
 
   let element = useRoutes([
     {
       path: "/",
       element: <Dashboard />,
+    },
+    {
+      path: "/repo/create",
+      element: <CreateRepository />,
     },
     {
       path: "/auth",

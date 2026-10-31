@@ -276,3 +276,28 @@
   outline-offset: 3px;
   border-radius: 12px;
 }
+
+
+.dashboard-repositories-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.dashboard-create-button {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #238636;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.dashboard-create-button:hover {
+  background: #2ea043;
+}

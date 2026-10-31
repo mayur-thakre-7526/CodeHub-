@@ -3,6 +3,7 @@ import "../navbar/navbar.css";
 import Navbar from "../navbar/Navbar.jsx";
 import "./dashboard.css";
 import RepositoryCard from "./RepositoryCard.jsx";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const [repositories, setRepositories] = useState([]); // current user repositories
@@ -129,7 +130,13 @@ const Dashboard = () => {
 
         {/* Main content */}
         <main>
-          <h2>Your Repositories</h2>
+          <div className="dashboard-repositories-header">
+            <h2>Your Repositories</h2>
+
+            <Link to="/repo/create" className="dashboard-create-button">
+              + Create Repository
+            </Link>
+          </div>
 
           <div id="search">
             <input

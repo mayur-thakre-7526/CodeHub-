@@ -1,0 +1,124 @@
+.create-repository-page {
+  min-height: calc(100vh - 70px);
+  padding: 48px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.create-repository-card {
+  width: 100%;
+  max-width: 620px;
+  padding: 32px;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  background: #161b22;
+  color: #e6edf3;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 24px;
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.create-repository-card h1 {
+  margin: 0 0 10px;
+  font-size: 28px;
+}
+
+.form-subtitle {
+  margin-bottom: 28px;
+  color: #8b949e;
+  line-height: 1.6;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.form-group label,
+.visibility-option label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea,
+.visibility-option select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  background: #0d1117;
+  color: #e6edf3;
+  font: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.visibility-option select:focus {
+  outline: 2px solid #1f6feb;
+  outline-offset: 1px;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.visibility-option {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.create-repository-button {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #238636;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.create-repository-button:hover {
+  background: #2ea043;
+}
+
+.create-repository-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-error {
+  margin-bottom: 16px;
+  color: #ff7b72;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .create-repository-page {
+    padding: 24px 14px;
+  }
+
+  .create-repository-card {
+    padding: 22px;
+  }
+
+  .create-repository-card h1 {
+    font-size: 23px;
+  }
+}
